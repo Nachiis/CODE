@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NFA\Application.cpp">
+    <ClCompile Include="DFA\Application.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
