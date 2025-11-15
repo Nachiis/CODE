@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36616.10 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CODE", "CODE\CODE.vcxproj", "{5BFC2FB2-63CD-4125-9A3D-FCB12D682178}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertToNFA", "ConvertToNFA\ConvertToNFA.vcxproj", "{61C9851A-B82D-4600-83E6-27BA778C2B7C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertToDFA", "ConvertToDFA\ConvertToDFA.vcxproj", "{61C9851A-B82D-4600-83E6-27BA778C2B7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
