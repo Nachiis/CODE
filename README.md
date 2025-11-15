@@ -1,3 +1,3 @@
-CODE文件夹为无符号数识别
+CODE 文件夹为无符号数识别
 
-ConvertToNFA文件夹包含正规式转化为最小DFA的部分，所以实际上是ConvertToDFA
+ConvertToDFA 文件夹包含正规式转化为最小DFA的部分
