@@ -302,7 +302,7 @@ void printNFA(const NFA& nfa, std::ostream& out) {
 // -------------------- NFA -> DFA (子集构造) --------------------
 
 struct DFAState {
-    int id;                       // 0..n-1
+    int id = 0;                       // 0..n-1
     bool isAccept = false;
     std::map<char, int> trans;    // symbol -> state id
     // 从构造算法中可知，一个 DFA 状态对应多个 NFA 状态
@@ -444,7 +444,7 @@ DFA nfaToDfa(const NFA& nfa) {
 // -------------------- DFA 最小化（表填充法） --------------------
 
 struct MinDFAState {
-    int id;
+    int id = 0;
     bool isAccept = false;
     std::map<char, int> trans;
 };
