@@ -37,6 +37,10 @@ namespace G2LL1
     /// </summary>
     internal static class GrammarTokenizer
     {
+        private static readonly HashSet<char> SingleCharTerminals = new()
+        {
+            '+','-','*','/','(',')','[',']','{','}','&','^','%','$','?','>','<','='
+        };
         public static List<GrammarToken> Tokenize(string filePath)
         {
             List<GrammarToken> tokens = new();
@@ -102,12 +106,12 @@ namespace G2LL1
             // todo: 检查每个alternative是否合法
             for (int i = 0; i < alternatives.Length; i++)
             {
-                if(i > 0)
+                if (i > 0)
                 {
                     tokens.Add(new GrammarToken(GrammarTokenType.Or, "|"));
                 }
                 string alternative = alternatives[i].Trim();
-                if(alternative.Length == 0)
+                if (alternative.Length == 0)
                 {
                     throw new Exception($"产生式右侧的某个备选项不能为空:{line}");
                 }
@@ -120,9 +124,9 @@ namespace G2LL1
             int i = 0;
             if (alternative[0] == '0')
             {
-                if(alternative.Length!=1)
+                if (alternative.Length != 1)
                 {
-                    throw new Exception($"空产生式只能包含单个字符0:{alternative}");
+                    throw new Exception($"空产生式只能包含单个字符0: {alternative}");
                 }
                 tokens.Add(new GrammarToken(GrammarTokenType.Epsilon, "0"));
                 return;
@@ -140,7 +144,7 @@ namespace G2LL1
                     int begin = i;
                     i++;
                     // 变量或终结符
-                    while(i < alternative.Length && char.IsDigit(alternative[i]))
+                    while (i < alternative.Length && char.IsDigit(alternative[i]))
                     {
                         i++;
                     }
@@ -153,6 +157,11 @@ namespace G2LL1
                     {
                         tokens.Add(new GrammarToken(GrammarTokenType.Terminal, lexeme));
                     }
+                }
+                else if (SingleCharTerminals.Contains(c))
+                {
+                    tokens.Add(new GrammarToken(GrammarTokenType.Terminal, c.ToString()));
+                    i++;
                 }
                 else
                 {
