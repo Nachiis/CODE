@@ -1,17 +1,30 @@
 ﻿
-
 namespace G2LL1
 {
-    class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
-            System.Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
-            System.Console.WriteLine($"args count:{args.Length}");
-            foreach (var arg in args)
+            if (args.Length < 1 || args.Length > 2)
             {
-                System.Console.WriteLine($"arg:{arg}");
+                Console.WriteLine("Use: G2LL1 inputFilePath [outputFilePath]");
+                return;
             }
+            string inputFilePath = args[0];
+            string? outputFilePath = args.Length == 2 ? args[1] : null;
+            if(!File.Exists(inputFilePath))
+            {
+                Console.WriteLine($"Input file '{inputFilePath}' does not exist.");
+                return;
+            }
+            var tokens = GrammarTokenizer.Tokenize(inputFilePath);
+            for(int i = 0; i < tokens.Count; i++)
+            {
+                Console.WriteLine($"{i}: {tokens[i]}");
+            }
+            var grammar = GrammarParser.Parse(tokens);
+            Console.WriteLine($"Parsed Grammar:{grammar}");
+
         }
     }
 }
