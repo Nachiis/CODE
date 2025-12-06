@@ -35,6 +35,11 @@ namespace G2LL1
             {
                 ParseProduction(grammar,tokens, ref index);
             }
+            // 验证所有非终结符均有产生式
+            if(!grammar.Check())
+            {
+                throw new Exception("Some variables have no productions.");
+            }
 
             return grammar;
         }

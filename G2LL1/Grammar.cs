@@ -30,5 +30,13 @@ namespace G2LL1
             }
             return sb.ToString();
         }
+        /// <summary>
+        /// 检查所有非终结符是否都有产生式。
+        /// </summary>
+        /// <returns>True 表示合法</returns>
+        public bool Check()
+        {
+            return Variables.All(v => Productions.ContainsKey(v));
+        }
     }
 }
