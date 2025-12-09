@@ -7,24 +7,56 @@ namespace G2LL1
         {
             if (args.Length < 1 || args.Length > 2)
             {
-                Console.WriteLine("Use: G2LL1 inputFilePath [outputFilePath]");
+                Console.WriteLine("Use: G2LL1 inputFilePath [outputFilePath.xlsx]");
                 return;
             }
             string inputFilePath = args[0];
-            string? outputFilePath = args.Length == 2 ? args[1] : null;
-            if(!File.Exists(inputFilePath))
+            string? outputFilePath = null;
+            if (args.Length == 2)
+            {
+                if (Path.GetExtension(args[1]).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    outputFilePath = args[1];
+                }
+                else
+                {
+                    Console.WriteLine("Output file must have .xlsx extension.");
+                    return;
+                }
+            }
+                
+
+            if (!File.Exists(inputFilePath))
             {
                 Console.WriteLine($"Input file '{inputFilePath}' does not exist.");
                 return;
             }
             var tokens = GrammarTokenizer.Tokenize(inputFilePath);
-            for(int i = 0; i < tokens.Count; i++)
+            for (int i = 0; i < tokens.Count; i++)
             {
                 Console.WriteLine($"{i}: {tokens[i]}");
             }
             var grammar = GrammarParser.Parse(tokens);
-            Console.WriteLine($"Parsed Grammar:{grammar}");
+            Console.WriteLine($"Parsed Grammar:\n{grammar}");
+            var firstSets = FirstCalculator.CalcFirstSet(grammar);
+            string firstSetStr = FirstCalculator.FirstSetToString(firstSets);
+            Console.WriteLine("First Sets:");
+            Console.WriteLine(firstSetStr);
+            var followSets = FollowCalculator.CalcFollowSet(grammar, firstSets);
+            string followSetStr = FollowCalculator.FollowSetToString(followSets);
+            Console.WriteLine("Follow Sets:");
+            Console.WriteLine(followSetStr);
 
+            var ll1Table = LL1TableConstructor.ConstructLL1Table(grammar, firstSets, followSets);
+            string ll1TableStr = LL1TableConstructor.LL1TableToString(ll1Table);
+            Console.WriteLine("LL(1) Parsing Table:");
+            Console.WriteLine(ll1TableStr);
+
+            if (outputFilePath != null)
+            {
+                LL1TableConstructor.ExportToExcel(ll1Table, grammar, outputFilePath);
+                Console.WriteLine($"LL(1) Parsing Table exported to '{outputFilePath}'.");
+            }
         }
     }
 }
