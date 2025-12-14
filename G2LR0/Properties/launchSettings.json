@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "G2LR0": {
+      "commandName": "Project",
+      "commandLineArgs": "input1.txt output1.xlsx"
+    }
+  }
+}
