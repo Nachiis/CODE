@@ -51,9 +51,9 @@ namespace G2LR0
             }
             return closure;
         }
-        public bool TryGoto(Dictionary<(int index, int viablePrefixIndex), Item> itemDict, out Item item)
+        public bool TryGoto(Dictionary<(int, int), Item> itemDict, out Item item)
         {
-            if(itemDict.TryGetValue((index, viablePrefixIndex + 1),out item))
+            if(itemDict.TryGetValue((this.index, this.viablePrefixIndex + 1),out item))
                 return true;
             return false;
         }

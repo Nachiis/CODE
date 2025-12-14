@@ -2,7 +2,7 @@
   "profiles": {
     "G2LL1": {
       "commandName": "Project",
-      "commandLineArgs": "input.txt"
+      "commandLineArgs": "input2.txt output.xlsx"
     }
   }
 }

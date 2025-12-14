@@ -40,12 +40,12 @@ namespace G2LL1
                                 // FIRST(beta) - ep
                                 foreach (var t in FIRST[beta[0]])
                                 {
-                                    if (t != "" && FOLLOW[B].Add(t))
+                                    if (t != Grammar.Epsilon && FOLLOW[B].Add(t))
                                         changed = true;
                                 }
 
                                 // 如果 FIRST(beta) 含 ep，则 FOLLOW(A) 加到 FOLLOW(B)
-                                bool allNullable = beta.All(s => FIRST[s].Contains(""));
+                                bool allNullable = beta.All(s => FIRST[s].Contains(Grammar.Epsilon));
 
                                 if (allNullable)
                                 {
@@ -72,7 +72,7 @@ namespace G2LL1
             StringBuilder sb = new();
             foreach (var (variable, followSet) in FOLLOW)
             {
-                sb.AppendLine($"FOLLOW({variable}) = {{ {string.Join(", ", followSet)} }}");
+                sb.AppendLine($"FOLLOW({variable}) = {{ {string.Join(", ", followSet)} }}, size: {FOLLOW[variable].Count}");
             }
             return sb.ToString();
         }

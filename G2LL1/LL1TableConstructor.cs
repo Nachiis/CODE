@@ -24,12 +24,12 @@ namespace G2LL1
 
                     foreach (var t in first)
                     {
-                        if (t == "") continue;
+                        if (t == Grammar.Epsilon) continue;
 
                         table[(A, t)] = right;
                     }
 
-                    if (first.Contains(""))
+                    if (first.Contains(Grammar.Epsilon))
                     {
                         foreach (var b in FOLLOW[A])
                         {
@@ -77,7 +77,7 @@ namespace G2LL1
                     if (table.ContainsKey(key))
                     {
                         var prod = table[key];
-                        string alpha = prod.Count == 1 && prod[0] == "" ? "ε" : string.Join(" ", prod);
+                        string alpha = string.Join(" ", prod);
                         ws.Cells[i + 2, j + 2].Value = $"{A} → {alpha}";
                     }
                     else
@@ -108,7 +108,7 @@ namespace G2LL1
             StringBuilder sb = new StringBuilder();
             foreach (var ((variable, terminal), production) in table)
             {
-                string productionStr = production.Count == 1 && production[0] == "" ? "ε" : string.Join(" ", production);
+                string productionStr = string.Join(" ", production);
                 sb.AppendLine($"M[{variable}, {terminal}] = {variable} -> {productionStr}");
             }
             return sb.ToString();
@@ -122,9 +122,9 @@ namespace G2LL1
         {
             HashSet<string> result = new();
 
-            if (str.Count == 1 && str[0] == "")
+            if (str.Count == 1 && str[0] == Grammar.Epsilon)
             {
-                result.Add("");
+                result.Add(Grammar.Epsilon);
                 return result;
             }
 
@@ -132,17 +132,82 @@ namespace G2LL1
             {
                 foreach (var x in FIRST[symbol])
                 {
-                    if (x != "")
+                    if (x != Grammar.Epsilon)
                         result.Add(x);
                 }
 
-                if (!FIRST[symbol].Contains(""))
+                if (!FIRST[symbol].Contains(Grammar.Epsilon))
                     return result;
             }
 
-            result.Add("");
+            result.Add(Grammar.Epsilon);
 
             return result;
         }
+        /// <summary>
+        /// 检查文法是否是LL(1)文法
+        /// </summary>
+        public static bool IsLL1Grammar(
+                Grammar grammar,
+                Dictionary<string, HashSet<string>> FIRST,
+                Dictionary<string, HashSet<string>> FOLLOW,
+                out string conflictMessage)
+        {
+            StringBuilder sb = new();
+
+            foreach (var A in grammar.Variables)
+            {
+                var rights = grammar.Productions[A];
+
+                // 两两比较产生式
+                for (int i = 0; i < rights.Count; i++)
+                {
+                    var alpha = rights[i];
+                    var FIRST_alpha = FirstOfString(alpha, FIRST);
+
+                    for (int j = i + 1; j < rights.Count; j++)
+                    {
+                        var beta = rights[j];
+                        var FIRST_beta = FirstOfString(beta, FIRST);
+
+                        // -------- 1. FIRST/FIRST 冲突 --------
+                        var interFF = FIRST_alpha.Intersect(FIRST_beta).ToList();
+                        if (interFF.Count > 0)
+                        {
+                            sb.AppendLine(
+                                $"冲突: 对 左部 = {A}, 产生式 {ProdStr(alpha)} 和 {ProdStr(beta)} 的 FIRST 集相交：{{ {ProdStr(interFF)} }}");
+                        }
+
+                        // -------- 2. FIRST/FOLLOW 冲突（ε 情况） --------
+                        if (FIRST_alpha.Contains(Grammar.Epsilon))
+                        {
+                            var interAF = FIRST_beta.Intersect(FOLLOW[A]).ToList();
+                            if (interAF.Count > 0)
+                            {
+                                sb.AppendLine(
+                                    $"冲突: 对 左部 = {A}, 产生式 {ProdStr(alpha)} 可推出 ε，且 FIRST({ProdStr(beta)}) 与 FOLLOW(A) 相交：{{ {ProdStr(interAF)} }}"
+                                    );
+                            }
+                        }
+
+                        if (FIRST_beta.Contains(Grammar.Epsilon))
+                        {
+                            var interBF = FIRST_alpha.Intersect(FOLLOW[A]).ToList();
+                            if (interBF.Count > 0)
+                            {
+                                sb.AppendLine(
+                                    $"冲突: 对 左部 = {A}, 产生式 {ProdStr(beta)} 可推出 ε，且 FIRST({ProdStr(alpha)}) 与 FOLLOW(A) 相交：{{ {ProdStr(interBF)} }}"
+                                    );
+                            }
+                        }
+                    }
+                }
+            }
+
+            conflictMessage = sb.ToString();
+            return conflictMessage.Length == 0;
+        }
+        private static string ProdStr(List<string> p)
+            => string.Join(" ", p);
     }
 }

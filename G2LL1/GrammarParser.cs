@@ -76,7 +76,7 @@ namespace G2LL1
                 }
                 else if(token.Type == GrammarTokenType.Epsilon)
                 {
-                    currentProduction.Add(string.Empty);
+                    currentProduction.Add(Grammar.Epsilon);
                 }
                 else if(token.Type == GrammarTokenType.Or)
                 {

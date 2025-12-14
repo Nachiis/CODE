@@ -6,7 +6,7 @@
         {
             if (args.Length < 1 || args.Length > 2)
             {
-                Console.WriteLine("Use: G2LL1 inputFilePath [outputFilePath.xlsx]");
+                Console.WriteLine("Use: G2LR0 inputFilePath [outputFilePath.xlsx]");
                 return;
             }
             string inputFilePath = args[0];

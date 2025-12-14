@@ -21,7 +21,7 @@ namespace G2LL1
             {
                 FIRST[variable] = new HashSet<string>();
             }
-            FIRST[""] = new HashSet<string> { "" };
+            FIRST[Grammar.Epsilon] = new HashSet<string> { Grammar.Epsilon };
             bool changed = true;
             while (changed)
             {
@@ -31,12 +31,12 @@ namespace G2LL1
                     foreach(var right in rights)
                     { 
                         // 空
-                        if(right.Count == 1 && right[0] == "")
+                        if(right.Count == 1 && right[0] == Grammar.Epsilon)
                         {
                             
-                            if (!FIRST[left].Contains(""))
+                            if (!FIRST[left].Contains(Grammar.Epsilon))
                             {
-                                FIRST[left].Add("");
+                                FIRST[left].Add(Grammar.Epsilon);
                                 changed = true;
                             }
                             continue;
@@ -47,12 +47,12 @@ namespace G2LL1
                             var symbol = right[i];
                             foreach (var firstSymbol in FIRST[symbol])
                             {
-                                if (firstSymbol != "" && FIRST[left].Add(firstSymbol))
+                                if (firstSymbol != Grammar.Epsilon && FIRST[left].Add(firstSymbol))
                                 {
                                     changed = true;
                                 }
                             }
-                            if (!FIRST[symbol].Contains(""))
+                            if (!FIRST[symbol].Contains(Grammar.Epsilon))
                             {
                                 break;
                             }
@@ -61,7 +61,7 @@ namespace G2LL1
                                 // X1 X2 ... Xn 全部能推导出 ε
                                 if (i == right.Count - 1)
                                 {
-                                    if (FIRST[left].Add(""))
+                                    if (FIRST[left].Add(Grammar.Epsilon))
                                     {
                                         changed = true;
                                     }
@@ -78,7 +78,7 @@ namespace G2LL1
             StringBuilder sb = new();
             foreach (var (symbol, firsts) in firstSet)
             {
-                sb.AppendLine($"FIRST({symbol}) = {{ {string.Join(", ", firsts)} }}");
+                sb.AppendLine($"FIRST({symbol}) = {{ {string.Join(", ", firsts)} }}, size: {firstSet[symbol].Count}");
             }
             return sb.ToString();
         }

@@ -37,7 +37,7 @@ namespace G2LL1
     /// </summary>
     internal static class GrammarTokenizer
     {
-        private static readonly HashSet<char> SingleCharTerminals = new()
+        private static readonly char[] SingleCharTerminals =
         {
             '+','-','*','/','(',')','[',']','{','}','&','^','%','$','?','>','<','='
         };
@@ -94,7 +94,7 @@ namespace G2LL1
             if (lhs.Length != 1)// 后续必须是数字，如A·1,A·12等
             {
                 string suffix = lhs.Substring(1);
-                if (!suffix.All(c => char.IsDigit(c) && c != '0'))
+                if (!suffix.All(c => char.IsDigit(c)))
                 {
                     throw new Exception($"产生式左侧变量格式错误:{line}");
                 }
@@ -128,7 +128,7 @@ namespace G2LL1
                 {
                     throw new Exception($"空产生式只能包含单个字符0: {alternative}");
                 }
-                tokens.Add(new GrammarToken(GrammarTokenType.Epsilon, "0"));
+                tokens.Add(new GrammarToken(GrammarTokenType.Epsilon, Grammar.Epsilon));
                 return;
             }
             while (i < alternative.Length)

@@ -46,6 +46,14 @@ namespace G2LL1
             string followSetStr = FollowCalculator.FollowSetToString(followSets);
             Console.WriteLine("Follow Sets:");
             Console.WriteLine(followSetStr);
+            // 检查是否是 ll1 文法
+            bool isLL1 = LL1TableConstructor.IsLL1Grammar(grammar, firstSets, followSets, out string conflictMessage);
+            if(!isLL1)
+            {
+                Console.WriteLine("The grammar is not LL(1):");
+                Console.WriteLine(conflictMessage);
+                return;
+            }
 
             var ll1Table = LL1TableConstructor.ConstructLL1Table(grammar, firstSets, followSets);
             string ll1TableStr = LL1TableConstructor.LL1TableToString(ll1Table);

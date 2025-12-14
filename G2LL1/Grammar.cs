@@ -9,6 +9,7 @@ namespace G2LL1
     using Productions = Dictionary<string, List<List<string>>>;
     internal class Grammar
     {
+        public readonly static string Epsilon = "ε";
         public string StartSymbol { get; set; } = "";
         public HashSet<string> Variables { get; set; } = new();
         public HashSet<string> Terminals { get; set; } = new();
