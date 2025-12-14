@@ -23,7 +23,7 @@ namespace G2LR0
         }
 
         /// <summary>
-        /// 给定一个 item 项目，生成该项目的闭包
+        /// 生成该项目的闭包
         /// </summary>
         /// <param name="dict"></param>
         /// <param name="item"></param>
